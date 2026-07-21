@@ -1,57 +1,31 @@
 ---
-title: Kasih yang Menguatkan
 date: 2026-07-21
-verse: "1 Korintus 16:14 — Segala sesuatu yang kamu perbuat, perbuatlah dengan kasih."
+title: Damai yang Menjaga Hati
+verse: "Filipi 4:6-7"
 ---
 
 # Embun Pagi
 
 ## Judul
-Kasih yang Menguatkan
+
+Damai yang Menjaga Hati
 
 ## Ayat
-"Segala sesuatu yang kamu perbuat, perbuatlah dengan kasih." — 1 Korintus 16:14
+
+"Janganlah hendaknya kamu kuatir tentang apa pun juga, tetapi
+nyatakanlah dalam segala hal keinginanmu kepada Allah dalam doa dan
+permohonan dengan ucapan syukur. Damai sejahtera Allah, yang melampaui
+segala akal, akan memelihara hati dan pikiranmu dalam Kristus Yesus."
+**Filipi 4:6-7 (TB)**
 
 ## Renungan
-Kasih adalah fondasi dari setiap tindakan kita sebagai orang Kristen. Ketika kita mengasihi dengan tulus, setiap pekerjaan menjadi berarti di mata Tuhan.
+
+Ada kalanya hidup terasa begitu padat. Pekerjaan menumpuk, kondisi
+keluarga membutuhkan perhatian, kesehatan mengkhawatirkan, atau masa
+depan terlihat penuh tanda tanya. Di tengah semua itu, hati mulai
+dipenuhi kekhawatiran.
 
 ## Quotes
-"Kasih tidak pernah gagal."
 
----
-
-# Youth Devotion
-
-## Judul
-Menjalani Hidup dengan Kasih
-
-## Ayat
-1 Korintus 16:14
-
-## Renungan
-Sebagai anak muda, kita sering dihadapkan pada banyak pilihan. Tuhan memanggil kita untuk tidak hanya melakukan yang benar, tetapi melakukannya dengan kasih.
-
-## Doa
-Tuhan Yesus, ajarilah aku untuk mengasihi seperti Engkau mengasihi. Amin.
-
-## Quotes
-"Kasih adalah bahasa universal."
-
----
-
-# Daily Devotion
-
-## Title
-Love in Action
-
-## Verse
-1 Corinthians 16:14 — Do everything in love.
-
-## Reflection
-Love is not just a feeling but an action. When we choose to act with love, we reflect God's character.
-
-## Prayer
-Lord, teach us to love genuinely. Amen.
-
-## Inspirational Quote
-"Love never fails."
+Damai sejati bukan lahir dari hidup tanpa masalah, tetapi dari hati yang
+percaya kepada Kristus di tengah setiap masalah.
