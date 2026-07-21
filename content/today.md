@@ -12,7 +12,7 @@ Tuhan Adalah Gembalaku
 
 ## Ayat
 
-"Tuhan adalah gembalaku, takkan kekurangan aku." — Mazmur 23:1
+> "Tuhan adalah gembalaku, takkan kekurangan aku." — Mazmur 23:1
 
 ## Renungan
 
@@ -22,7 +22,7 @@ Ketika kita merasa lelah dan kehabisan tenaga, ingatlah bahwa Tuhan mengajak kit
 
 ## Quotes
 
-"Kasih Tuhan tidak pernah berakhir, setiap pagi adalah bukti baru dari kesetiaan-Nya."
+> "Kasih Tuhan tidak pernah berakhir, setiap pagi adalah bukti baru dari kesetiaan-Nya."
 
 ---
 
@@ -34,7 +34,7 @@ Faith Over Fear
 
 ## Ayat
 
-"Sebab Aku ini mengetahui rancangan-rancangan apa yang ada pada-Ku mengenai kamu, demikianlah firman TUHAN, yaitu rancangan damai sejahtera dan bukan rancangan kecelakaan, untuk memberikan kepadamu hari depan yang penuh harapan." — Yeremia 29:11
+> "Sebab Aku ini mengetahui rancangan-rancangan apa yang ada pada-Ku mengenai kamu, demikianlah firman TUHAN, yaitu rancangan damai sejahtera dan bukan rancangan kecelakaan, untuk memberikan kepadamu hari depan yang penuh harapan." — Yeremia 29:11
 
 ## Renungan
 
@@ -50,7 +50,7 @@ Bapa Surgawi, terima kasih untuk rencana indah-Mu dalam hidupku. Berikan aku keb
 
 ## Quotes
 
-"Your faith must always be greater than your fear."
+> "Your faith must always be greater than your fear."
 
 ---
 
@@ -62,7 +62,7 @@ The Lord Is My Shepherd
 
 ## Verse
 
-"The Lord is my shepherd; I shall not want." — Psalm 23:1 (ESV)
+> "The Lord is my shepherd; I shall not want." — Psalm 23:1 (ESV)
 
 ## Reflection
 
@@ -78,4 +78,4 @@ Heavenly Father, thank You for being my Shepherd. I trust in Your provision and 
 
 ## Inspirational Quote
 
-"God's love never runs out. Every morning is fresh proof of His faithfulness."
+> "God's love never runs out. Every morning is fresh proof of His faithfulness."
