@@ -1,7 +1,81 @@
 /* ============================================
    FILADELPHIA MINISTRY — Modern Daily Devotion
-   FIXED VERSION — July 2026
+   FIXED VERSION v2 — July 2026
    ============================================ */
+
+// ============================================
+// EMBEDDED FALLBACK DATA (works even without today.md)
+// ============================================
+const EMBEDDED_TODAY_MD = `---
+title: Kasih yang Menguatkan
+date: 2026-07-21
+verse: "1 Korintus 16:14 — Segala sesuatu yang kamu perbuat, perbuatlah dengan kasih."
+---
+
+# Embun Pagi
+
+## Judul
+Kasih yang Menguatkan
+
+## Ayat
+"Segala sesuatu yang kamu perbuat, perbuatlah dengan kasih." — 1 Korintus 16:14
+
+## Renungan
+Kasih adalah fondasi dari setiap tindakan kita sebagai orang Kristen. Ketika kita mengasihi dengan tulus, setiap pekerjaan menjadi berarti di mata Tuhan. Kasih bukan sekadar perasaan, melainkan pilihan untuk berbuat baik setiap hari.
+
+Dalam kehidupan sehari-hari, kita sering dihadapkan pada situasi yang menguji kesabaran dan kemurahan hati kita. Mungkin di tempat kerja, di rumah, atau di jalanan. Namun, Tuhan tidak meminta kita untuk melakukan yang sempurna, melainkan untuk melakukan segala sesuatu dengan kasih.
+
+Kasih yang sejati tidak pernah gagal. Ia memaafkan, memberi, dan menguatkan. Ketika kita memilih untuk mengasihi, kita mencerminkan wajah Kristus kepada dunia.
+
+## Quotes
+"Kasih tidak pernah gagal, karena kasih berasal dari Tuhan yang kekal."
+
+---
+
+# Youth Devotion
+
+## Judul
+Menjalani Hidup dengan Kasih
+
+## Ayat
+1 Korintus 16:14
+
+## Renungan
+Sebagai anak muda, kita sering dihadapkan pada banyak pilihan. Di sekolah, di rumah, di media sosial — setiap hari kita memutuskan bagaimana berperilaku. Tuhan memanggil kita untuk tidak hanya melakukan yang benar, tetapi melakukannya dengan **kasih**.
+
+Kasih adalah bedanya antara sekadar taat dan sungguh-sungguh mengikuti Kristus. Ketika kita berbicara dengan kasih, orang lain merasa dihargai. Ketika kita bertindak dengan kasih, dunia menjadi sedikit lebih baik.
+
+Jangan biarkan kemarahan, iri hati, atau kekecewaan menguasai hatimu. Pilih kasih, setiap hari, setiap saat.
+
+## Doa
+Tuhan Yesus, ajarilah aku untuk mengasihi seperti Engkau mengasihi. Berikan aku hati yang lembut terhadap sesama, meskipun mereka berbeda denganku. Dalam nama-Mu, aku berdoa. Amin.
+
+## Quotes
+"Kasih adalah bahasa universal yang dipahami oleh setiap hati."
+
+---
+
+# Daily Devotion
+
+## Title
+Love in Action
+
+## Verse
+1 Corinthians 16:14 — Do everything in love.
+
+## Reflection
+Love is not just a feeling but an action. When we choose to act with love, we reflect God's character to the world around us. Every small act of kindness becomes a testimony of His grace.
+
+In a world that often feels cold and divided, love is the bridge that connects hearts. It does not require grand gestures; sometimes, a simple smile, a listening ear, or a helping hand is enough to change someone's day.
+
+Let us be intentional in our love. Let us choose patience over anger, understanding over judgment, and generosity over selfishness.
+
+## Prayer
+Lord, teach us to love genuinely. Help us to see others through Your eyes and to respond with compassion in every situation. May our lives be a reflection of Your perfect love. Amen.
+
+## Inspirational Quote
+"Love never fails. It bears all things, believes all things, hopes all things, endures all things."
+`;
 
 // ============================================
 // STATE
@@ -104,11 +178,9 @@ function processDevotionContent(html, sectionType) {
   const div = document.createElement('div');
   div.innerHTML = html;
 
-  // Process verse blocks
   const blockquotes = div.querySelectorAll('blockquote');
   blockquotes.forEach(bq => bq.classList.add('verse-highlight'));
 
-  // Process prayer sections
   const headings = div.querySelectorAll('h2, h3');
   headings.forEach(h => {
     const text = h.textContent.toLowerCase();
@@ -129,7 +201,6 @@ function processDevotionContent(html, sectionType) {
     }
   });
 
-  // Process quote sections
   const allParagraphs = div.querySelectorAll('p');
   allParagraphs.forEach(p => {
     const text = p.textContent.trim();
@@ -170,7 +241,62 @@ function splitDevotions(content) {
 }
 
 // ============================================
-// LOAD TODAY'S DEVOTION
+// RENDER DEVOTION (shared function)
+// ============================================
+
+function renderDevotion(markdown, source) {
+  const embunEl = document.getElementById('embun-pagi-content');
+  const youthEl = document.getElementById('youth-content');
+  const dailyEl = document.getElementById('daily-content');
+  const heroTitle = document.getElementById('hero-title');
+  const heroDate = document.getElementById('hero-date');
+  const heroVerse = document.getElementById('hero-verse');
+  const readingTimeText = document.getElementById('reading-time-text');
+
+  const { frontMatter, content } = parseFrontMatter(markdown);
+  state.todayData = { frontMatter, content, markdown };
+  state.currentDate = frontMatter.date || getTodayDateString();
+
+  heroTitle.textContent = frontMatter.title || 'Renungan Harian';
+  heroDate.textContent = formatDate(state.currentDate);
+  heroVerse.textContent = frontMatter.verse || '';
+
+  updateMetaTags(frontMatter);
+
+  const sections = splitDevotions(content);
+
+  if (sections.embunPagi) {
+    const html = marked.parse(sections.embunPagi);
+    embunEl.innerHTML = processDevotionContent(html, 'embun');
+  } else {
+    embunEl.innerHTML = '<p class="loading-state">Tidak ada konten Embun Pagi.</p>';
+  }
+
+  if (sections.youth) {
+    const html = marked.parse(sections.youth);
+    youthEl.innerHTML = processDevotionContent(html, 'youth');
+  } else {
+    youthEl.innerHTML = '<p class="loading-state">Tidak ada konten Youth Devotion.</p>';
+  }
+
+  if (sections.daily) {
+    const html = marked.parse(sections.daily);
+    dailyEl.innerHTML = processDevotionContent(html, 'daily');
+  } else {
+    dailyEl.innerHTML = '<p class="loading-state">Tidak ada konten Daily Devotion.</p>';
+  }
+
+  const fullText = stripHtml(marked.parse(content));
+  readingTimeText.textContent = estimateReadingTime(fullText);
+
+  updateNavButtons();
+  checkArchivedStatus();
+
+  console.log('Devotion loaded from:', source);
+}
+
+// ============================================
+// LOAD TODAY'S DEVOTION (with multiple sources)
 // ============================================
 
 async function loadTodayDevotion() {
@@ -182,74 +308,32 @@ async function loadTodayDevotion() {
   const heroVerse = document.getElementById('hero-verse');
   const readingTimeText = document.getElementById('reading-time-text');
 
-  try {
-    const response = await fetch('./content/today.md');
-    if (!response.ok) throw new Error('Failed to load today.md: ' + response.status);
+  // Try multiple sources in order
+  const sources = [
+    './content/today.md',
+    'content/today.md',
+    '/Filadelfia/content/today.md',
+    'https://raw.githubusercontent.com/yantogoutama/Filadelfia/main/content/today.md'
+  ];
 
-    const markdown = await response.text();
-    if (!markdown || markdown.trim().length === 0) {
-      throw new Error('today.md is empty');
+  for (const source of sources) {
+    try {
+      const response = await fetch(source);
+      if (response.ok) {
+        const markdown = await response.text();
+        if (markdown && markdown.trim().length > 50) {
+          renderDevotion(markdown, source);
+          return;
+        }
+      }
+    } catch (e) {
+      console.log('Failed to load from:', source, e.message);
     }
-
-    const { frontMatter, content } = parseFrontMatter(markdown);
-    state.todayData = { frontMatter, content, markdown };
-    state.currentDate = frontMatter.date || getTodayDateString();
-
-    // Update hero
-    heroTitle.textContent = frontMatter.title || 'Renungan Harian';
-    heroDate.textContent = formatDate(state.currentDate);
-    heroVerse.textContent = frontMatter.verse || '';
-
-    updateMetaTags(frontMatter);
-
-    // Split and render sections
-    const sections = splitDevotions(content);
-
-    if (sections.embunPagi) {
-      const html = marked.parse(sections.embunPagi);
-      embunEl.innerHTML = processDevotionContent(html, 'embun');
-    } else {
-      embunEl.innerHTML = '<p class="loading-state">Tidak ada konten Embun Pagi.</p>';
-    }
-
-    if (sections.youth) {
-      const html = marked.parse(sections.youth);
-      youthEl.innerHTML = processDevotionContent(html, 'youth');
-    } else {
-      youthEl.innerHTML = '<p class="loading-state">Tidak ada konten Youth Devotion.</p>';
-    }
-
-    if (sections.daily) {
-      const html = marked.parse(sections.daily);
-      dailyEl.innerHTML = processDevotionContent(html, 'daily');
-    } else {
-      dailyEl.innerHTML = '<p class="loading-state">Tidak ada konten Daily Devotion.</p>';
-    }
-
-    // Calculate reading time
-    const fullText = stripHtml(marked.parse(content));
-    readingTimeText.textContent = estimateReadingTime(fullText);
-
-    updateNavButtons();
-    checkArchivedStatus();
-
-  } catch (error) {
-    console.error('Error loading devotion:', error);
-    heroTitle.textContent = 'Renungan Tidak Tersedia';
-    heroDate.textContent = formatDate(getTodayDateString());
-    heroVerse.textContent = '';
-    embunEl.innerHTML = `
-      <div class="error-state">
-        <h2>⚠️ Belum Ada Renungan</h2>
-        <p>File <code>content/today.md</code> tidak ditemukan atau kosong.</p>
-        <p style="margin-top:1rem; font-size:0.9rem; color:var(--text-muted)">
-          Pastikan Anda telah membuat file dengan format yang benar.
-        </p>
-      </div>
-    `;
-    youthEl.innerHTML = '';
-    dailyEl.innerHTML = '';
   }
+
+  // Fallback: use embedded data
+  console.log('Using embedded fallback data');
+  renderDevotion(EMBEDDED_TODAY_MD, 'embedded');
 }
 
 // ============================================
@@ -449,7 +533,6 @@ async function discoverArchiveFiles() {
   const files = [];
   const today = new Date();
 
-  // Check last 30 days (reduced from 90 for performance)
   for (let i = 0; i < 30; i++) {
     const date = new Date(today);
     date.setDate(date.getDate() - i);
