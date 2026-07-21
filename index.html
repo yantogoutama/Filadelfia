@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Filadelfia Ministry — Renungan Harian</title>
+  <meta name="description" content="Renungan Harian Kristen modern dari Filadelfia Ministry. Embun Pagi, Youth Devotion, dan Daily Devotion setiap hari.">
+  <meta name="keywords" content="renungan harian, kristen, devotion, filadelfia, embun pagi, youth devotion, daily devotion, alkitab">
+  <meta name="author" content="Filadelfia Ministry">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Filadelfia Ministry — Renungan Harian">
+  <meta property="og:description" content="Renungan Harian Kristen modern dari Filadelfia Ministry.">
+  <meta property="og:image" content="./assets/og-image.jpg">
+  <meta property="og:url" content="https://filadelfiaministry.github.io">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Filadelfia Ministry — Renungan Harian">
+  <meta name="twitter:description" content="Renungan Harian Kristen modern dari Filadelfia Ministry.">
+  <meta name="twitter:image" content="./assets/og-image.jpg">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✝️</text></svg>">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Noto+Serif:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+  <!-- Marked.js -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Reading Progress Bar -->
+  <div id="progress-bar" class="progress-bar"></div>
+
+  <!-- Navigation -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="#" class="logo" onclick="showPage('today'); return false;">
+        <span class="logo-icon">✝️</span>
+        <span class="logo-text">Filadelfia<span class="logo-ministry">Ministry</span></span>
+      </a>
+      <div class="nav-links" id="nav-links">
+        <a href="#" onclick="showPage('today'); return false;" class="nav-link active" data-page="today">Today</a>
+        <a href="#" onclick="showPage('archive'); return false;" class="nav-link" data-page="archive">Archive</a>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+          <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+          <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+        </button>
+      </div>
+      <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="#" onclick="showPage('today'); return false;">Today</a>
+    <a href="#" onclick="showPage('archive'); return false;">Archive</a>
+  </div>
+
+  <!-- TODAY PAGE -->
+  <main id="page-today" class="page active">
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-bg"></div>
+      <div class="hero-content">
+        <span class="hero-label">Renungan Harian</span>
+        <h1 class="hero-title" id="hero-title">Loading...</h1>
+        <p class="hero-date" id="hero-date"></p>
+        <p class="hero-verse" id="hero-verse"></p>
+        <div class="hero-meta">
+          <span class="reading-time" id="reading-time">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            <span id="reading-time-text">Calculating...</span>
+          </span>
+        </div>
+      </div>
+      <div class="scroll-indicator">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14m-7-7l7 7 7-7"/></svg>
+      </div>
+    </section>
+
+    <!-- Devotion Content -->
+    <div class="content-wrapper">
+      <div class="content-container">
+        <!-- Embun Pagi -->
+        <article class="devotion-section" id="section-embun-pagi">
+          <div class="section-header">
+            <div class="section-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3v1m0 16v1m-8.66-9.34l.71.71m15.56 0l.71-.71M5.64 5.64l.71.71m11.3 11.3l.71.71M12 7a5 5 0 100 10 5 5 0 000-10z"/></svg>
+            </div>
+            <h2 class="section-title">Embun Pagi</h2>
+          </div>
+          <div class="devotion-content" id="embun-pagi-content"></div>
+        </article>
+
+        <!-- Youth Devotion -->
+        <article class="devotion-section" id="section-youth">
+          <div class="section-header">
+            <div class="section-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+            </div>
+            <h2 class="section-title">Youth Devotion</h2>
+          </div>
+          <div class="devotion-content" id="youth-content"></div>
+        </article>
+
+        <!-- Daily Devotion -->
+        <article class="devotion-section" id="section-daily">
+          <div class="section-header">
+            <div class="section-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+            </div>
+            <h2 class="section-title">Daily Devotion</h2>
+          </div>
+          <div class="devotion-content" id="daily-content"></div>
+        </article>
+      </div>
+    </div>
+
+    <!-- Navigation Footer -->
+    <div class="devotion-nav">
+      <div class="devotion-nav-container">
+        <button class="nav-btn" id="prev-btn" onclick="loadPrevDevotion()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5m7 7l-7-7 7-7"/></svg>
+          Previous
+        </button>
+        <button class="archive-btn" id="archive-today-btn" onclick="archiveToday()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4m4-5l5 5 5-5m-5-5v12"/></svg>
+          Archive Today
+        </button>
+        <button class="nav-btn" id="next-btn" onclick="loadNextDevotion()">
+          Next
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg>
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- ARCHIVE PAGE -->
+  <main id="page-archive" class="page">
+    <section class="archive-hero">
+      <div class="archive-hero-content">
+        <h1>Archive</h1>
+        <p>Semua renungan harian yang telah kami publikasikan</p>
+
+        <!-- Search -->
+        <div class="search-box">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+          <input type="text" id="search-input" placeholder="Search by title, verse, or keyword..." autocomplete="off">
+        </div>
+      </div>
+    </section>
+
+    <div class="archive-container">
+      <div class="archive-stats" id="archive-stats"></div>
+      <div class="archive-grid" id="archive-grid"></div>
+      <div class="no-results" id="no-results" style="display:none;">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M8 8l6 6m0-6l-6 6"/></svg>
+        <p>No devotionals found matching your search.</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Back To Top -->
+  <button class="back-to-top" id="back-to-top" aria-label="Back to top">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 15l-6-6-6 6"/></svg>
+  </button>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <span class="footer-icon">✝️</span>
+        <span class="footer-name">Filadelfia Ministry</span>
+      </div>
+      <p class="footer-tagline">"Menginspirasi setiap pagi, membangun iman setiap hari."</p>
+      <p class="footer-copyright">&copy; <span id="footer-year"></span> Filadelfia Ministry. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
