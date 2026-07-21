@@ -1,81 +1,57 @@
 ---
-title: God Never Fails
-date: 2026-07-20
-verse: Psalm 23:1
+title: Kasih yang Menguatkan
+date: 2026-07-21
+verse: "1 Korintus 16:14 — Segala sesuatu yang kamu perbuat, perbuatlah dengan kasih."
 ---
 
 # Embun Pagi
 
 ## Judul
-
-Tuhan Adalah Gembalaku
+Kasih yang Menguatkan
 
 ## Ayat
-
-> "Tuhan adalah gembalaku, takkan kekurangan aku." — Mazmur 23:1
+"Segala sesuatu yang kamu perbuat, perbuatlah dengan kasih." — 1 Korintus 16:14
 
 ## Renungan
-
-Pagi ini, mari kita renungkan kasih setia Tuhan. Sebagai gembala yang baik, Dia selalu memelihara kita dengan penuh kasih. Di tengah tantangan hidup, kita tidak perlu takut karena Tuhan selalu menyediakan yang terbaik bagi umat-Nya.
-
-Ketika kita merasa lelah dan kehabisan tenaga, ingatlah bahwa Tuhan mengajak kita untuk datang kepada-Nya. Dia akan memberikan kelegaan dan kekuatan baru. Jangan biarkan kekhawatiran menguasai hati kita, sebab Tuhan sudah mengatur setiap langkah hidup kita.
+Kasih adalah fondasi dari setiap tindakan kita sebagai orang Kristen. Ketika kita mengasihi dengan tulus, setiap pekerjaan menjadi berarti di mata Tuhan. Kasih bukan sekadar perasaan, melainkan pilihan untuk berbuat baik setiap hari.
 
 ## Quotes
-
-> "Kasih Tuhan tidak pernah berakhir, setiap pagi adalah bukti baru dari kesetiaan-Nya."
+"Kasih tidak pernah gagal, karena kasih berasal dari Tuhan yang kekal."
 
 ---
 
 # Youth Devotion
 
 ## Judul
-
-Faith Over Fear
+Menjalani Hidup dengan Kasih
 
 ## Ayat
-
-> "Sebab Aku ini mengetahui rancangan-rancangan apa yang ada pada-Ku mengenai kamu, demikianlah firman TUHAN, yaitu rancangan damai sejahtera dan bukan rancangan kecelakaan, untuk memberikan kepadamu hari depan yang penuh harapan." — Yeremia 29:11
+1 Korintus 16:14
 
 ## Renungan
-
-Hai anak muda, jangan biarkan ketakutan menghentikan langkahmu! Tuhan sudah merencanakan masa depan yang penuh harapan bagimu. Setiap tantangan yang kamu hadapi adalah batu loncatan untuk membuatmu lebih kuat.
-
-Dunia mungkin menawarkan banyak hal yang menggoda, tetapi ingatlah bahwa identitasmu ada di dalam Kristus. Kamu adalah anak Tuhan yang dicintai, dipilih, dan dipanggil untuk tujuan yang mulia.
-
-Jadilah berani dalam iman. Jadilah terang di tengah kegelapan. Dunia ini membutuhkan generasi muda yang tak gentar menghadapi tantangan karena mereka tahu siapa yang berada di pihak mereka.
+Sebagai anak muda, kita sering dihadapkan pada banyak pilihan. Di sekolah, di rumah, di media sosial — setiap hari kita memutuskan bagaimana berperilaku. Tuhan memanggil kita untuk tidak hanya melakukan yang benar, tetapi melakukannya dengan **kasih**. Kasih adalah bedanya antara sekadar taat dan sungguh-sungguh mengikuti Kristus.
 
 ## Doa
-
-Bapa Surgawi, terima kasih untuk rencana indah-Mu dalam hidupku. Berikan aku keberanian untuk melangkah dengan iman, bukan dengan ketakutan. Ajar aku untuk selalu mengandalkan-Mu dalam setiap keputusan. Dalam nama Yesus, aku berdoa. Amin.
+Tuhan Yesus, ajarilah aku untuk mengasihi seperti Engkau mengasihi. Berikan aku hati yang lembut terhadap sesama, meskipun mereka berbeda denganku. Dalam nama-Mu, aku berdoa. Amin.
 
 ## Quotes
-
-> "Your faith must always be greater than your fear."
+"Kasih adalah bahasa universal yang dipahami oleh setiap hati."
 
 ---
 
 # Daily Devotion
 
 ## Title
-
-The Lord Is My Shepherd
+Love in Action
 
 ## Verse
-
-> "The Lord is my shepherd; I shall not want." — Psalm 23:1 (ESV)
+1 Corinthians 16:14 — Do everything in love.
 
 ## Reflection
-
-This morning, let us reflect on the faithful love of God. As a good shepherd, He always cares for us with full love. In the midst of life's challenges, we need not fear because God always provides the best for His people.
-
-When we feel tired and exhausted, remember that God invites us to come to Him. He will give relief and new strength. Do not let worry dominate our hearts, for God has already arranged every step of our lives.
-
-The shepherd knows each sheep by name. He leads us to green pastures and still waters. Even when we walk through the valley of the shadow of death, His rod and staff comfort us. This is the promise we hold onto today.
+Love is not just a feeling but an action. When we choose to act with love, we reflect God's character to the world around us. Every small act of kindness becomes a testimony of His grace.
 
 ## Prayer
-
-Heavenly Father, thank You for being my Shepherd. I trust in Your provision and guidance today. Help me to rest in Your presence and not be anxious about tomorrow. Fill me with Your peace that surpasses all understanding. In Jesus' name, Amen.
+Lord, teach us to love genuinely. Help us to see others through Your eyes and to respond with compassion in every situation. Amen.
 
 ## Inspirational Quote
-
-> "God's love never runs out. Every morning is fresh proof of His faithfulness."
+"Love never fails. It bears all things, believes all things, hopes all things, endures all things."
