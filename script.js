@@ -1,10 +1,10 @@
 /* ============================================
    FILADELPHIA MINISTRY — Modern Daily Devotion
-   FIXED VERSION v4 — July 2026
+   DEBUG VERSION v5 — July 2026
    ============================================ */
 
 // ============================================
-// EMBEDDED FALLBACK DATA (updated)
+// EMBEDDED FALLBACK DATA
 // ============================================
 const EMBEDDED_TODAY_MD = `---
 title: Tuhan Meneguhkan Langkah
@@ -251,7 +251,7 @@ function splitDevotions(content) {
 }
 
 // ============================================
-// RENDER DEVOTION (shared function)
+// RENDER DEVOTION
 // ============================================
 
 function renderDevotion(markdown, source) {
@@ -317,13 +317,36 @@ function renderDevotion(markdown, source) {
 }
 
 // ============================================
-// LOAD TODAY'S DEVOTION (FIXED)
+// DEBUG: Tampilkan status di layar
+// ============================================
+
+function showDebugStatus(message, isError) {
+  const debugDiv = document.getElementById('debug-status');
+  if (debugDiv) {
+    debugDiv.innerHTML += '<div style="padding:4px 0;border-bottom:1px solid #eee;">' + 
+      (isError ? '❌ ' : '✅ ') + message + '</div>';
+  }
+}
+
+// ============================================
+// LOAD TODAY'S DEVOTION (DEBUG VERSION)
 // ============================================
 
 async function loadTodayDevotion() {
   const embunEl = document.getElementById('embun-pagi-content');
   const youthEl = document.getElementById('youth-content');
   const dailyEl = document.getElementById('daily-content');
+
+  // Buat debug panel
+  let debugPanel = document.getElementById('debug-panel');
+  if (!debugPanel) {
+    debugPanel = document.createElement('div');
+    debugPanel.id = 'debug-panel';
+    debugPanel.style.cssText = 'position:fixed;bottom:20px;right:20px;width:320px;max-height:300px;overflow-y:auto;background:#1a1a2e;color:#eee;padding:12px;border-radius:8px;font-size:12px;z-index:99999;box-shadow:0 4px 20px rgba(0,0,0,0.5);';
+    debugPanel.innerHTML = '<div style="font-weight:bold;margin-bottom:8px;border-bottom:1px solid #444;padding-bottom:4px;">🐛 Debug Load</div><div id="debug-status"></div>';
+    document.body.appendChild(debugPanel);
+  }
+  document.getElementById('debug-status').innerHTML = '';
 
   // Tampilkan loading
   if (embunEl) embunEl.innerHTML = '<div class="loading-state"><div class="loading-spinner"></div><p>Memuat renungan...</p></div>';
@@ -332,39 +355,44 @@ async function loadTodayDevotion() {
 
   // Coba semua kemungkinan path
   const basePaths = [
-    '',                          // root
-    'content/',                  // content subfolder
-    '/Filadelfia/content/',      // repo subpath
-    'Filadelfia/content/'        // repo subpath tanpa leading slash
+    '',
+    'content/',
+    '/Filadelfia/content/',
+    'Filadelfia/content/'
   ];
 
   const cacheBuster = '?_=' + Date.now();
-  let loaded = false;
 
   for (const basePath of basePaths) {
     try {
       const url = basePath + 'today.md' + cacheBuster;
-      console.log('Trying:', url);
+      showDebugStatus('Mencoba: ' + url, false);
+
       const response = await fetch(url);
 
       if (response.ok) {
         const markdown = await response.text();
-        console.log('Success from:', url, 'Length:', markdown.length);
+        showDebugStatus('Berhasil! Panjang: ' + markdown.length + ' chars', false);
 
         if (markdown && markdown.trim().length > 50 && markdown.includes('---')) {
           renderDevotion(markdown, url);
-          loaded = true;
+          showDebugStatus('✅ Renungan ditampilkan dari: ' + url, false);
           return;
+        } else {
+          showDebugStatus('File terlalu pendek atau tidak ada front matter', true);
         }
+      } else {
+        showDebugStatus('Gagal: HTTP ' + response.status + ' untuk ' + url, true);
       }
     } catch (e) {
-      console.log('Failed path:', basePath, e.message);
+      showDebugStatus('Error: ' + e.message + ' (' + basePath + ')', true);
     }
   }
 
   // Jika semua gagal, gunakan fallback
-  console.log('All paths failed. Using embedded fallback.');
+  showDebugStatus('Semua path gagal. Menggunakan fallback...', true);
   renderDevotion(EMBEDDED_TODAY_MD, 'embedded');
+  showDebugStatus('✅ Fallback ditampilkan', false);
 }
 
 // ============================================
