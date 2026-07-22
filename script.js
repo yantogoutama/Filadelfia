@@ -1,12 +1,12 @@
 /* ============================================
-   FILADELPHIA MINISTRY — Modern Daily Devotion
-   EMBEDDED ARCHIVE VERSION — No Fetch Needed
+   FILADELPHIA MINISTRY — Super Minimal Version
+   All data embedded — no fetch needed
    ============================================ */
 
 // ============================================
-// EMBEDDED TODAY DATA (renungan hari ini)
+// EMBEDDED DATA (renungan hari ini)
 // ============================================
-const EMBEDDED_TODAY_MD = `---
+const TODAY_MD = `---
 title: Tetap Setia dalam Proses Tuhan
 date: 2026-07-22
 verse: "Yakobus 1:2-3"
@@ -115,13 +115,12 @@ Every season in God's hands has a purpose. What challenges your faith today may 
 // ============================================
 // EMBEDDED ARCHIVE DATA
 // ============================================
-// CARA MENAMBAH ARCHIVE BARU:
-// 1. Copy isi renungan (sama format dengan EMBEDDED_TODAY_MD)
-// 2. Tambahkan di bawah dengan format: 'YYYY-MM-DD': `...`
-// 3. Pastikan ada koma (,) setelah setiap entry, KECUALI yang terakhir
-// ============================================
-const EMBEDDED_ARCHIVE = {
-  '2026-07-21': `---
+const ARCHIVE_DATA = [
+  {
+    date: '2026-07-21',
+    title: 'Tuhan Meneguhkan Langkah',
+    verse: 'Mazmur 37:23',
+    markdown: `---
 title: Tuhan Meneguhkan Langkah
 date: 2026-07-21
 verse: "Mazmur 37:23"
@@ -201,70 +200,37 @@ Lord Jesus, guide my steps today and help me trust You completely. May my life h
 
 God rarely reveals the whole journey, but He is always faithful to lead the next step.
 `
-  // TAMBAHKAN ARCHIVE BARU DI SINI
-  // Contoh:
-  // ,'2026-07-23': `---
-  // title: Judul Renungan
-  // date: 2026-07-23
-  // verse: "Ayat"
-  // ---
-  // ... isi renungan ...
-  // `
-};
+  }
+];
 
 // ============================================
 // STATE
 // ============================================
 const state = {
   currentDate: null,
-  archiveFiles: [],
-  archiveData: [],
-  todayData: null,
   isDark: false,
-  currentPage: 'today',
-  archivedDates: new Set()
+  currentPage: 'today'
 };
 
 // ============================================
-// UTILITY FUNCTIONS
+// UTILITY
 // ============================================
-
 function formatDate(dateStr) {
   try {
     const date = new Date(dateStr + 'T00:00:00');
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    return date.toLocaleDateString('id-ID', options);
-  } catch (e) {
-    return dateStr;
-  }
+    return date.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+  } catch (e) { return dateStr; }
 }
 
 function formatShortDate(dateStr) {
   try {
     const date = new Date(dateStr + 'T00:00:00');
     return date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
-  } catch (e) {
-    return dateStr;
-  }
-}
-
-function estimateReadingTime(text) {
-  if (!text) return '1 min read';
-  const words = text.trim().split(/\s+/).length;
-  const minutes = Math.ceil(words / 200);
-  return minutes + ' min read';
-}
-
-function stripHtml(html) {
-  if (!html) return '';
-  const tmp = document.createElement('div');
-  tmp.innerHTML = html;
-  return tmp.textContent || tmp.innerText || '';
+  } catch (e) { return dateStr; }
 }
 
 function getTodayDateString() {
-  const now = new Date();
-  return now.toISOString().split('T')[0];
+  return new Date().toISOString().split('T')[0];
 }
 
 function getYesterdayDateString(dateStr) {
@@ -279,378 +245,6 @@ function getTomorrowDateString(dateStr) {
   return date.toISOString().split('T')[0];
 }
 
-// ============================================
-// FRONT MATTER PARSER
-// ============================================
-
-function parseFrontMatter(markdown) {
-  const match = markdown.match(/^---\s*
-([\s\S]*?)
----\s*
-([\s\S]*)$/);
-  if (!match) return { frontMatter: {}, content: markdown };
-
-  const frontMatter = {};
-  const lines = match[1].split('
-');
-  for (const line of lines) {
-    const colonIndex = line.indexOf(':');
-    if (colonIndex > 0) {
-      const key = line.slice(0, colonIndex).trim();
-      let value = line.slice(colonIndex + 1).trim();
-      if ((value.startsWith('"') && value.endsWith('"')) || 
-          (value.startsWith("'") && value.endsWith("'"))) {
-        value = value.slice(1, -1);
-      }
-      frontMatter[key] = value;
-    }
-  }
-  return { frontMatter, content: match[2] };
-}
-
-// ============================================
-// MARKDOWN PROCESSING
-// ============================================
-
-function processDevotionContent(html, sectionType) {
-  if (!html) return '';
-  const div = document.createElement('div');
-  div.innerHTML = html;
-
-  const blockquotes = div.querySelectorAll('blockquote');
-  blockquotes.forEach(bq => bq.classList.add('verse-highlight'));
-
-  const headings = div.querySelectorAll('h2, h3');
-  headings.forEach(h => {
-    const text = h.textContent.toLowerCase();
-    if (text.includes('doa') || text.includes('prayer')) {
-      let sibling = h.nextElementSibling;
-      const prayerContent = [];
-      while (sibling && !sibling.matches('h1, h2, h3, h4, h5, h6, hr')) {
-        prayerContent.push(sibling);
-        sibling = sibling.nextElementSibling;
-      }
-      if (prayerContent.length > 0) {
-        const prayerBox = document.createElement('div');
-        prayerBox.className = 'prayer-box';
-        prayerContent.forEach(el => prayerBox.appendChild(el.cloneNode(true)));
-        prayerContent.forEach(el => el.remove());
-        h.parentNode.insertBefore(prayerBox, h.nextElementSibling);
-      }
-    }
-  });
-
-  const allParagraphs = div.querySelectorAll('p');
-  allParagraphs.forEach(p => {
-    const text = p.textContent.trim();
-    if ((text.startsWith('"') && text.endsWith('"')) || 
-        (text.startsWith('"') && text.includes('" —')) ||
-        (text.includes('—') && text.length < 300)) {
-      const card = document.createElement('div');
-      card.className = 'quote-card';
-      const quoteText = document.createElement('p');
-      quoteText.textContent = text;
-      card.appendChild(quoteText);
-      p.parentNode.replaceChild(card, p);
-    }
-  });
-
-  return div.innerHTML;
-}
-
-function splitDevotions(content) {
-  const sections = { embunPagi: '', youth: '', daily: '' };
-  const h1Regex = /^(#{1}\s+.+)$/gm;
-  const parts = content.split(h1Regex);
-
-  for (let i = 1; i < parts.length; i += 2) {
-    const header = parts[i].replace(/^#\s*/, '').trim();
-    const body = parts[i + 1] || '';
-    const fullSection = parts[i] + '
-' + body;
-    const lowerHeader = header.toLowerCase();
-    if (lowerHeader.includes('embun pagi')) {
-      sections.embunPagi = fullSection;
-    } else if (lowerHeader.includes('youth')) {
-      sections.youth = fullSection;
-    } else if (lowerHeader.includes('daily')) {
-      sections.daily = fullSection;
-    }
-  }
-  return sections;
-}
-
-// ============================================
-// RENDER DEVOTION
-// ============================================
-
-function renderDevotion(markdown, source) {
-  const embunEl = document.getElementById('embun-pagi-content');
-  const youthEl = document.getElementById('youth-content');
-  const dailyEl = document.getElementById('daily-content');
-  const heroTitle = document.getElementById('hero-title');
-  const heroDate = document.getElementById('hero-date');
-  const heroVerse = document.getElementById('hero-verse');
-  const readingTimeText = document.getElementById('reading-time-text');
-
-  if (embunEl) embunEl.innerHTML = '';
-  if (youthEl) youthEl.innerHTML = '';
-  if (dailyEl) dailyEl.innerHTML = '';
-
-  const { frontMatter, content } = parseFrontMatter(markdown);
-  state.todayData = { frontMatter, content, markdown };
-  state.currentDate = frontMatter.date || getTodayDateString();
-
-  if (heroTitle) heroTitle.textContent = frontMatter.title || 'Renungan Harian';
-  if (heroDate) heroDate.textContent = formatDate(state.currentDate);
-  if (heroVerse) heroVerse.textContent = frontMatter.verse || '';
-
-  updateMetaTags(frontMatter);
-
-  const sections = splitDevotions(content);
-
-  if (embunEl) {
-    if (sections.embunPagi) {
-      const html = marked.parse(sections.embunPagi);
-      embunEl.innerHTML = processDevotionContent(html, 'embun');
-    } else {
-      embunEl.innerHTML = '<p class="loading-state">Tidak ada konten Embun Pagi.</p>';
-    }
-  }
-
-  if (youthEl) {
-    if (sections.youth) {
-      const html = marked.parse(sections.youth);
-      youthEl.innerHTML = processDevotionContent(html, 'youth');
-    } else {
-      youthEl.innerHTML = '<p class="loading-state">Tidak ada konten Youth Devotion.</p>';
-    }
-  }
-
-  if (dailyEl) {
-    if (sections.daily) {
-      const html = marked.parse(sections.daily);
-      dailyEl.innerHTML = processDevotionContent(html, 'daily');
-    } else {
-      dailyEl.innerHTML = '<p class="loading-state">Tidak ada konten Daily Devotion.</p>';
-    }
-  }
-
-  const fullText = stripHtml(marked.parse(content));
-  if (readingTimeText) readingTimeText.textContent = estimateReadingTime(fullText);
-
-  updateNavButtons();
-  checkArchivedStatus();
-
-  console.log('Devotion loaded from:', source);
-}
-
-// ============================================
-// LOAD TODAY'S DEVOTION
-// ============================================
-
-async function loadTodayDevotion() {
-  const embunEl = document.getElementById('embun-pagi-content');
-  const youthEl = document.getElementById('youth-content');
-  const dailyEl = document.getElementById('daily-content');
-
-  const loadingHtml = '<div class="loading-state"><div class="loading-spinner"></div><p>Memuat renungan...</p></div>';
-  if (embunEl) embunEl.innerHTML = loadingHtml;
-  if (youthEl) youthEl.innerHTML = loadingHtml;
-  if (dailyEl) dailyEl.innerHTML = loadingHtml;
-
-  // Coba load dari server (today.md)
-  const basePaths = [
-    '',
-    'content/',
-    '/Filadelfia/content/',
-    'Filadelfia/content/'
-  ];
-
-  const cacheBuster = '?_=' + Date.now();
-
-  for (const basePath of basePaths) {
-    try {
-      const url = basePath + 'today.md' + cacheBuster;
-      const response = await fetch(url);
-
-      if (response.ok) {
-        const markdown = await response.text();
-
-        if (markdown && markdown.trim().length > 50 && markdown.includes('---')) {
-          renderDevotion(markdown, url);
-          return;
-        }
-      }
-    } catch (e) {
-      // Silently fail
-    }
-  }
-
-  // Jika gagal, gunakan embedded fallback
-  renderDevotion(EMBEDDED_TODAY_MD, 'embedded');
-}
-
-// ============================================
-// LOAD ARCHIVED DEVOTION (DARI EMBEDDED)
-// ============================================
-
-function loadArchivedDevotion(dateStr) {
-  const embunEl = document.getElementById('embun-pagi-content');
-  const youthEl = document.getElementById('youth-content');
-  const dailyEl = document.getElementById('daily-content');
-  const heroTitle = document.getElementById('hero-title');
-  const heroDate = document.getElementById('hero-date');
-  const heroVerse = document.getElementById('hero-verse');
-  const readingTimeText = document.getElementById('reading-time-text');
-
-  // Cek apakah ada di EMBEDDED_ARCHIVE
-  if (EMBEDDED_ARCHIVE[dateStr]) {
-    renderDevotion(EMBEDDED_ARCHIVE[dateStr], 'embedded-archive');
-    return;
-  }
-
-  // Jika tidak ada, tampilkan error
-  console.error('Archive not found:', dateStr);
-  heroTitle.textContent = 'Renungan Tidak Ditemukan';
-  heroDate.textContent = formatDate(dateStr);
-  embunEl.innerHTML = '<div class="error-state"><p>Renungan untuk tanggal ' + dateStr + ' belum tersedia.</p></div>';
-  youthEl.innerHTML = '';
-  dailyEl.innerHTML = '';
-}
-
-// ============================================
-// NAVIGATION
-// ============================================
-
-function updateNavButtons() {
-  const prevBtn = document.getElementById('prev-btn');
-  const nextBtn = document.getElementById('next-btn');
-
-  const yesterday = getYesterdayDateString(state.currentDate);
-  const tomorrow = getTomorrowDateString(state.currentDate);
-  const today = getTodayDateString();
-
-  if (prevBtn) {
-    prevBtn.disabled = false;
-    prevBtn.onclick = function() { loadArchivedDevotion(yesterday); };
-  }
-
-  if (nextBtn) {
-    if (tomorrow > today) {
-      nextBtn.disabled = true;
-      nextBtn.onclick = null;
-    } else {
-      nextBtn.disabled = false;
-      nextBtn.onclick = function() { loadArchivedDevotion(tomorrow); };
-    }
-  }
-}
-
-function loadPrevDevotion() {
-  const yesterday = getYesterdayDateString(state.currentDate);
-  loadArchivedDevotion(yesterday);
-}
-
-function loadNextDevotion() {
-  const tomorrow = getTomorrowDateString(state.currentDate);
-  const today = getTodayDateString();
-  if (tomorrow <= today) {
-    loadArchivedDevotion(tomorrow);
-  }
-}
-
-// ============================================
-// PAGE NAVIGATION
-// ============================================
-
-function showPage(pageName) {
-  state.currentPage = pageName;
-
-  document.querySelectorAll('.page').forEach(page => {
-    page.classList.remove('active');
-  });
-
-  const targetPage = document.getElementById('page-' + pageName);
-  if (targetPage) targetPage.classList.add('active');
-
-  document.querySelectorAll('.nav-link').forEach(link => {
-    link.classList.toggle('active', link.dataset.page === pageName);
-  });
-
-  const mobileMenu = document.getElementById('mobile-menu');
-  const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-  if (mobileMenu) mobileMenu.classList.remove('active');
-  if (mobileMenuBtn) mobileMenuBtn.classList.remove('active');
-
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-
-  if (pageName === 'archive') {
-    loadArchive();
-  }
-}
-
-// ============================================
-// ARCHIVE (DARI EMBEDDED DATA)
-// ============================================
-
-function loadArchive() {
-  const grid = document.getElementById('archive-grid');
-  const stats = document.getElementById('archive-stats');
-  const noResults = document.getElementById('no-results');
-
-  if (grid) grid.innerHTML = '<div class="loading-state"><div class="loading-spinner"></div><p>Loading archive...</p></div>';
-
-  // Ambil semua archive dari EMBEDDED_ARCHIVE
-  const archiveData = [];
-  for (const [dateStr, markdown] of Object.entries(EMBEDDED_ARCHIVE)) {
-    const { frontMatter } = parseFrontMatter(markdown);
-    archiveData.push({
-      filename: dateStr + '.md',
-      date: dateStr,
-      title: frontMatter.title || 'Untitled',
-      verse: frontMatter.verse || ''
-    });
-  }
-
-  // Sort descending (terbaru dulu)
-  archiveData.sort(function(a, b) {
-    return new Date(b.date) - new Date(a.date);
-  });
-
-  state.archiveData = archiveData;
-
-  renderArchive(archiveData);
-  if (stats) stats.textContent = archiveData.length + ' devotion' + (archiveData.length !== 1 ? 's' : '') + ' in archive';
-}
-
-function renderArchive(data) {
-  const grid = document.getElementById('archive-grid');
-  const noResults = document.getElementById('no-results');
-
-  if (data.length === 0) {
-    if (grid) grid.innerHTML = '';
-    if (noResults) noResults.style.display = 'block';
-    return;
-  }
-
-  if (noResults) noResults.style.display = 'none';
-
-  if (grid) {
-    grid.innerHTML = data.map(function(item) {
-      return '<a href="#" class="archive-card" onclick="loadArchivedDevotion('' + item.date + ''); showPage('today'); return false;">' +
-        '<div class="archive-card-date">' + formatShortDate(item.date) + '</div>' +
-        '<div class="archive-card-title">' + escapeHtml(item.title) + '</div>' +
-        (item.verse ? '<div class="archive-card-verse">' + escapeHtml(item.verse) + '</div>' : '') +
-        '<div class="archive-card-read">' +
-          'Read More' +
-          '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14m-7-7l7 7-7 7"/></svg>' +
-        '</div>' +
-      '</a>';
-    }).join('');
-  }
-}
-
 function escapeHtml(text) {
   const div = document.createElement('div');
   div.textContent = text;
@@ -658,119 +252,159 @@ function escapeHtml(text) {
 }
 
 // ============================================
-// SEARCH
+// PARSER
 // ============================================
-
-function setupSearch() {
-  const searchInput = document.getElementById('search-input');
-  if (!searchInput) return;
-
-  searchInput.addEventListener('input', debounce(function(e) {
-    const query = e.target.value.toLowerCase().trim();
-
-    if (!query) {
-      renderArchive(state.archiveData);
-      const stats = document.getElementById('archive-stats');
-      if (stats) stats.textContent = 
-        state.archiveData.length + ' devotion' + (state.archiveData.length !== 1 ? 's' : '') + ' in archive';
-      return;
+function parseFrontMatter(md) {
+  const match = md.match(/^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/);
+  if (!match) return { frontMatter: {}, content: md };
+  const fm = {};
+  match[1].split('\n').forEach(line => {
+    const idx = line.indexOf(':');
+    if (idx > 0) {
+      let v = line.slice(idx + 1).trim();
+      if ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'"))) v = v.slice(1, -1);
+      fm[line.slice(0, idx).trim()] = v;
     }
-
-    const filtered = state.archiveData.filter(function(item) {
-      return item.title.toLowerCase().includes(query) ||
-        (item.verse && item.verse.toLowerCase().includes(query)) ||
-        item.date.includes(query);
-    });
-
-    renderArchive(filtered);
-    const stats = document.getElementById('archive-stats');
-    if (stats) stats.textContent = 
-      filtered.length + ' result' + (filtered.length !== 1 ? 's' : '') + ' for "' + escapeHtml(query) + '"';
-  }, 300));
+  });
+  return { frontMatter: fm, content: match[2] };
 }
 
-function debounce(func, wait) {
-  let timeout;
-  return function executedFunction() {
-    const args = arguments;
-    const later = function() {
-      clearTimeout(timeout);
-      func.apply(null, args);
-    };
-    clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
-  };
+function splitSections(content) {
+  const sections = { embunPagi: '', youth: '', daily: '' };
+  const parts = content.split(/^(#{1}\s+.+)$/gm);
+  for (let i = 1; i < parts.length; i += 2) {
+    const h = parts[i].replace(/^#\s*/, '').trim().toLowerCase();
+    const body = parts[i + 1] || '';
+    const full = parts[i] + '\n' + body;
+    if (h.includes('embun pagi')) sections.embunPagi = full;
+    else if (h.includes('youth')) sections.youth = full;
+    else if (h.includes('daily')) sections.daily = full;
+  }
+  return sections;
 }
 
 // ============================================
-// ARCHIVE TODAY
+// RENDER
 // ============================================
+function render(markdown) {
+  const { frontMatter, content } = parseFrontMatter(markdown);
+  state.currentDate = frontMatter.date || getTodayDateString();
 
-function checkArchivedStatus() {
-  const btn = document.getElementById('archive-today-btn');
-  if (!btn || !state.currentDate || !state.todayData) return;
+  document.getElementById('hero-title').textContent = frontMatter.title || 'Renungan Harian';
+  document.getElementById('hero-date').textContent = formatDate(state.currentDate);
+  document.getElementById('hero-verse').textContent = frontMatter.verse || '';
 
-  const archived = localStorage.getItem('archived_' + state.currentDate);
-  if (archived) {
-    btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Archived';
-    btn.classList.add('archived');
-    btn.disabled = true;
+  const sections = splitSections(content);
+  const embun = document.getElementById('embun-pagi-content');
+  const youth = document.getElementById('youth-content');
+  const daily = document.getElementById('daily-content');
+
+  embun.innerHTML = sections.embunPagi ? marked.parse(sections.embunPagi) : '<p>Tidak ada konten.</p>';
+  youth.innerHTML = sections.youth ? marked.parse(sections.youth) : '<p>Tidak ada konten.</p>';
+  daily.innerHTML = sections.daily ? marked.parse(sections.daily) : '<p>Tidak ada konten.</p>';
+
+  updateNav();
+}
+
+function updateNav() {
+  const prev = document.getElementById('prev-btn');
+  const next = document.getElementById('next-btn');
+  const yesterday = getYesterdayDateString(state.currentDate);
+  const tomorrow = getTomorrowDateString(state.currentDate);
+  const today = getTodayDateString();
+
+  prev.disabled = false;
+  prev.onclick = () => loadByDate(yesterday);
+
+  if (tomorrow > today) {
+    next.disabled = true;
+    next.onclick = null;
   } else {
-    btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4m4-5l5 5 5-5m-5-5v12"/></svg>Archive Today';
-    btn.classList.remove('archived');
-    btn.disabled = false;
+    next.disabled = false;
+    next.onclick = () => loadByDate(tomorrow);
   }
 }
 
-function archiveToday() {
-  if (!state.todayData || !state.currentDate) return;
-
-  const dateStr = state.currentDate;
-  const filename = dateStr + '.md';
-  const content = state.todayData.markdown;
-
-  const blob = new Blob([content], { type: 'text/markdown' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-
-  localStorage.setItem('archived_' + dateStr, content);
-  localStorage.setItem('archive_meta_' + dateStr, JSON.stringify({
-    date: dateStr,
-    title: state.todayData.frontMatter.title || 'Untitled',
-    verse: state.todayData.frontMatter.verse || ''
-  }));
-
-  checkArchivedStatus();
-  showNotification('Downloaded ' + filename + '. Move it to /content/archive/ folder.');
+// ============================================
+// LOAD BY DATE
+// ============================================
+function loadByDate(dateStr) {
+  // Cek archive
+  const archived = ARCHIVE_DATA.find(a => a.date === dateStr);
+  if (archived) {
+    render(archived.markdown);
+    return;
+  }
+  // Cek today
+  if (dateStr === getTodayDateString()) {
+    render(TODAY_MD);
+    return;
+  }
+  // Not found
+  document.getElementById('hero-title').textContent = 'Renungan Tidak Ditemukan';
+  document.getElementById('hero-date').textContent = formatDate(dateStr);
+  document.getElementById('embun-pagi-content').innerHTML = '<p>Renungan untuk tanggal ini belum tersedia.</p>';
+  document.getElementById('youth-content').innerHTML = '';
+  document.getElementById('daily-content').innerHTML = '';
 }
 
-function showNotification(message) {
-  const notification = document.createElement('div');
-  notification.style.cssText = 'position: fixed; top: 80px; left: 50%; transform: translateX(-50%); background: var(--bg-card); color: var(--text); padding: 14px 24px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 8px 24px var(--shadow-lg); z-index: 10000; font-size: 0.9rem; font-weight: 500; animation: slideDown 0.3s ease-out;';
-  notification.textContent = message;
-  document.body.appendChild(notification);
+// ============================================
+// ARCHIVE PAGE
+// ============================================
+function loadArchive() {
+  const grid = document.getElementById('archive-grid');
+  const stats = document.getElementById('archive-stats');
 
-  setTimeout(function() {
-    notification.style.animation = 'slideUp 0.3s ease-out';
-    setTimeout(function() { notification.remove(); }, 300);
-  }, 5000);
+  const all = [...ARCHIVE_DATA];
+  // Add today if not in archive
+  const todayStr = getTodayDateString();
+  if (!all.find(a => a.date === todayStr)) {
+    const { frontMatter } = parseFrontMatter(TODAY_MD);
+    all.push({ date: todayStr, title: frontMatter.title, verse: frontMatter.verse, markdown: TODAY_MD });
+  }
+
+  all.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+  if (all.length === 0) {
+    grid.innerHTML = '<p>Belum ada archive.</p>';
+    stats.textContent = '';
+    return;
+  }
+
+  grid.innerHTML = all.map(item =>
+    '<a href="#" class="archive-card" onclick="loadByDate(\'' + item.date + '\'); showPage(\'today\'); return false;">' +
+      '<div class="archive-card-date">' + formatShortDate(item.date) + '</div>' +
+      '<div class="archive-card-title">' + escapeHtml(item.title) + '</div>' +
+      (item.verse ? '<div class="archive-card-verse">' + escapeHtml(item.verse) + '</div>' : '') +
+      '<div class="archive-card-read">Read More →</div>' +
+    '</a>'
+  ).join('');
+
+  stats.textContent = all.length + ' devotion' + (all.length !== 1 ? 's' : '');
+}
+
+// ============================================
+// PAGE NAV
+// ============================================
+function showPage(name) {
+  state.currentPage = name;
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const page = document.getElementById('page-' + name);
+  if (page) page.classList.add('active');
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.toggle('active', l.dataset.page === name));
+  document.getElementById('mobile-menu')?.classList.remove('active');
+  document.getElementById('mobile-menu-btn')?.classList.remove('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (name === 'archive') loadArchive();
 }
 
 // ============================================
 // THEME
 // ============================================
-
 function initTheme() {
   const saved = localStorage.getItem('theme');
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-  if (saved === 'dark' || (!saved && prefersDark)) {
+  const dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  if (saved === 'dark' || (!saved && dark)) {
     document.documentElement.setAttribute('data-theme', 'dark');
     state.isDark = true;
   }
@@ -778,155 +412,23 @@ function initTheme() {
 
 function toggleTheme() {
   state.isDark = !state.isDark;
-  if (state.isDark) {
-    document.documentElement.setAttribute('data-theme', 'dark');
-    localStorage.setItem('theme', 'dark');
-  } else {
-    document.documentElement.removeAttribute('data-theme');
-    localStorage.setItem('theme', 'light');
-  }
+  document.documentElement.setAttribute('data-theme', state.isDark ? 'dark' : 'light');
+  localStorage.setItem('theme', state.isDark ? 'dark' : 'light');
 }
 
 // ============================================
-// PROGRESS BAR & BACK TO TOP
+// INIT
 // ============================================
-
-function updateProgressBar() {
-  const bar = document.getElementById('progress-bar');
-  if (!bar) return;
-  const scrollTop = window.scrollY;
-  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-  const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
-  bar.style.width = progress + '%';
-}
-
-function updateBackToTop() {
-  const btn = document.getElementById('back-to-top');
-  if (!btn) return;
-  if (window.scrollY > 500) {
-    btn.classList.add('visible');
-  } else {
-    btn.classList.remove('visible');
-  }
-}
-
-function scrollToTop() {
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-// ============================================
-// META TAGS
-// ============================================
-
-function updateMetaTags(frontMatter) {
-  const title = frontMatter.title || 'Filadelfia Ministry — Renungan Harian';
-  const verse = frontMatter.verse || '';
-  const description = verse ? title + ' — ' + verse : title;
-
-  document.title = title + ' — Filadelfia Ministry';
-
-  const ogTitle = document.querySelector('meta[property="og:title"]');
-  const ogDesc = document.querySelector('meta[property="og:description"]');
-  const twTitle = document.querySelector('meta[name="twitter:title"]');
-  const twDesc = document.querySelector('meta[name="twitter:description"]');
-  const metaDesc = document.querySelector('meta[name="description"]');
-
-  if (ogTitle) ogTitle.setAttribute('content', title);
-  if (ogDesc) ogDesc.setAttribute('content', description);
-  if (twTitle) twTitle.setAttribute('content', title);
-  if (twDesc) twDesc.setAttribute('content', description);
-  if (metaDesc) metaDesc.setAttribute('content', description);
-}
-
-// ============================================
-// MOBILE MENU
-// ============================================
-
-function toggleMobileMenu() {
-  const menu = document.getElementById('mobile-menu');
-  const btn = document.getElementById('mobile-menu-btn');
-  if (menu) menu.classList.toggle('active');
-  if (btn) btn.classList.toggle('active');
-}
-
-// ============================================
-// KEYBOARD NAVIGATION
-// ============================================
-
-document.addEventListener('keydown', function(e) {
-  if (state.currentPage === 'today') {
-    const prevBtn = document.getElementById('prev-btn');
-    const nextBtn = document.getElementById('next-btn');
-    if (e.key === 'ArrowLeft' && prevBtn && !prevBtn.disabled) {
-      loadPrevDevotion();
-    } else if (e.key === 'ArrowRight' && nextBtn && !nextBtn.disabled) {
-      loadNextDevotion();
-    }
-  }
-
-  if (e.key === 'Escape') {
-    const menu = document.getElementById('mobile-menu');
-    const btn = document.getElementById('mobile-menu-btn');
-    if (menu) menu.classList.remove('active');
-    if (btn) btn.classList.remove('active');
-  }
-});
-
-// ============================================
-// INITIALIZATION
-// ============================================
-
 document.addEventListener('DOMContentLoaded', function() {
-  // Set footer year
-  const footerYear = document.getElementById('footer-year');
-  if (footerYear) footerYear.textContent = new Date().getFullYear();
-
-  // Initialize theme
+  document.getElementById('footer-year').textContent = new Date().getFullYear();
   initTheme();
-
-  // Theme toggle
-  const themeToggle = document.getElementById('theme-toggle');
-  if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
-
-  // Mobile menu
-  const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-  if (mobileMenuBtn) mobileMenuBtn.addEventListener('click', toggleMobileMenu);
-
-  // Back to top
-  const backToTop = document.getElementById('back-to-top');
-  if (backToTop) backToTop.addEventListener('click', scrollToTop);
-
-  // Scroll events
-  window.addEventListener('scroll', function() {
-    updateProgressBar();
-    updateBackToTop();
+  document.getElementById('theme-toggle')?.addEventListener('click', toggleTheme);
+  document.getElementById('mobile-menu-btn')?.addEventListener('click', () => {
+    document.getElementById('mobile-menu')?.classList.toggle('active');
+    document.getElementById('mobile-menu-btn')?.classList.toggle('active');
   });
+  document.getElementById('back-to-top')?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
-  // Search
-  setupSearch();
-
-  // Load today's devotion
-  loadTodayDevotion();
-
-  // Check URL hash
-  const hash = window.location.hash;
-  if (hash.startsWith('#archive-')) {
-    const dateStr = hash.replace('#archive-', '');
-    showPage('today');
-    loadArchivedDevotion(dateStr);
-  }
-});
-
-// Handle browser back/forward
-window.addEventListener('popstate', function() {
-  const hash = window.location.hash;
-  if (hash.startsWith('#archive-')) {
-    const dateStr = hash.replace('#archive-', '');
-    showPage('today');
-    loadArchivedDevotion(dateStr);
-  } else if (hash === '#archive') {
-    showPage('archive');
-  } else {
-    showPage('today');
-  }
+  // Load today
+  render(TODAY_MD);
 });
