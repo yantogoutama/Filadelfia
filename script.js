@@ -1,10 +1,10 @@
 /* ============================================
    FILADELPHIA MINISTRY — Modern Daily Devotion
-   FINAL VERSION — Clean & Professional
+   EMBEDDED ARCHIVE VERSION — No Fetch Needed
    ============================================ */
 
 // ============================================
-// EMBEDDED FALLBACK DATA (updated: 2026-07-22)
+// EMBEDDED TODAY DATA (renungan hari ini)
 // ============================================
 const EMBEDDED_TODAY_MD = `---
 title: Tetap Setia dalam Proses Tuhan
@@ -113,6 +113,106 @@ Every season in God's hands has a purpose. What challenges your faith today may 
 `;
 
 // ============================================
+// EMBEDDED ARCHIVE DATA
+// ============================================
+// CARA MENAMBAH ARCHIVE BARU:
+// 1. Copy isi renungan (sama format dengan EMBEDDED_TODAY_MD)
+// 2. Tambahkan di bawah dengan format: 'YYYY-MM-DD': `...`
+// 3. Pastikan ada koma (,) setelah setiap entry, KECUALI yang terakhir
+// ============================================
+const EMBEDDED_ARCHIVE = {
+  '2026-07-21': `---
+title: Tuhan Meneguhkan Langkah
+date: 2026-07-21
+verse: "Mazmur 37:23"
+---
+
+# Embun Pagi
+
+## Tuhan Meneguhkan Langkah
+
+## Ayat
+
+"TUHAN menetapkan langkah-langkah orang yang hidupnya berkenan kepada-Nya." (Mazmur 37:23)
+
+## Renungan
+
+Setiap hari membawa pilihan, tantangan, dan ketidakpastian. Sering kali kita ingin mengetahui seluruh peta perjalanan sebelum melangkah. Namun Tuhan jarang memberikan seluruh peta itu. Ia lebih sering memberikan terang yang cukup untuk langkah berikutnya.
+
+Di dalam Kristus kita belajar bahwa hidup bukan dikendalikan oleh rasa takut, melainkan oleh iman. Yesus sendiri berjalan taat kepada kehendak Bapa, bahkan ketika jalan itu menuju salib. Karena ketaatan-Nya, kita menerima keselamatan dan pengharapan yang tidak tergoncangkan.
+
+Ketika kita menyerahkan keputusan, pekerjaan, keluarga, dan pelayanan kepada Tuhan, kita dapat percaya bahwa Dia sedang membentuk karakter kita sekaligus memimpin arah hidup kita. Mungkin tidak semua doa dijawab sesuai keinginan kita, tetapi Tuhan tidak pernah berhenti bekerja demi kebaikan anak-anak-Nya.
+
+Hari ini, jangan hanya meminta Tuhan mengubah keadaan. Mintalah hati yang mau mengikuti pimpinan-Nya. Langkah kecil yang dilakukan dalam ketaatan sering kali menjadi awal dari pekerjaan besar yang Tuhan sediakan.
+
+Aplikasi: Mulailah hari dengan doa singkat sebelum mengambil keputusan penting dan percayakan hasilnya kepada Tuhan.
+
+## Quotes
+
+Ketaatan hari ini membuka jalan bagi penyertaan Tuhan esok hari.
+
+---
+
+# Youth Devotion
+
+## Langkah Berani
+
+## Ayat
+
+"Percayalah kepada TUHAN dengan segenap hatimu..." (Amsal 3:5)
+
+## Renungan
+
+Dunia mendorong kita untuk mengandalkan kemampuan sendiri. Namun firman Tuhan mengingatkan bahwa hikmat sejati dimulai ketika kita percaya kepada-Nya. Yesus memahami pergumulan kita dan mengundang kita berjalan bersama-Nya setiap hari.
+
+Di sekolah, kampus, atau tempat kerja, akan selalu ada tekanan untuk mengikuti arus. Jadilah pribadi yang berani memilih integritas sekalipun tidak populer. Tuhan mampu memakai kesetiaan kecil untuk menghasilkan dampak yang besar.
+
+## Doa
+
+Tuhan Yesus, tuntun setiap langkahku hari ini. Berikan keberanian untuk memilih yang benar dan hati yang setia mengikuti-Mu. Amin.
+
+## Quotes
+
+Orang yang berjalan bersama Kristus tidak pernah berjalan sendirian.
+
+---
+
+# Daily Devotion
+
+## God Directs Every Faithful Step
+
+## Verse
+
+"The LORD makes firm the steps of the one who delights in him." — Psalm 37:23 (NIV)
+
+## Reflection
+
+Life often feels uncertain, yet God never loses sight of His children. Through Jesus Christ we see the perfect example of faithful obedience. Christ trusted the Father completely, even when the road led to the cross. Because of His sacrifice and resurrection, we have hope that our lives are held securely in God's hands.
+
+Walking by faith does not mean having every answer. It means trusting the One who knows the end from the beginning. As you face today's responsibilities, invite Christ into every decision. His Spirit provides wisdom, peace, and strength for each step.
+
+Perhaps God is not changing your circumstances as quickly as you desire. Even so, He is shaping your heart. Every act of obedience prepares you for greater usefulness in His kingdom. Keep your eyes on Jesus and continue walking faithfully, knowing that He is leading you with perfect love.
+
+## Prayer
+
+Lord Jesus, guide my steps today and help me trust You completely. May my life honor You in every decision. Amen.
+
+## Inspirational Quote
+
+God rarely reveals the whole journey, but He is always faithful to lead the next step.
+`
+  // TAMBAHKAN ARCHIVE BARU DI SINI
+  // Contoh:
+  // ,'2026-07-23': `---
+  // title: Judul Renungan
+  // date: 2026-07-23
+  // verse: "Ayat"
+  // ---
+  // ... isi renungan ...
+  // `
+};
+
+// ============================================
 // STATE
 // ============================================
 const state = {
@@ -184,11 +284,15 @@ function getTomorrowDateString(dateStr) {
 // ============================================
 
 function parseFrontMatter(markdown) {
-  const match = markdown.match(/^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/);
+  const match = markdown.match(/^---\s*
+([\s\S]*?)
+---\s*
+([\s\S]*)$/);
   if (!match) return { frontMatter: {}, content: markdown };
 
   const frontMatter = {};
-  const lines = match[1].split('\n');
+  const lines = match[1].split('
+');
   for (const line of lines) {
     const colonIndex = line.indexOf(':');
     if (colonIndex > 0) {
@@ -262,7 +366,8 @@ function splitDevotions(content) {
   for (let i = 1; i < parts.length; i += 2) {
     const header = parts[i].replace(/^#\s*/, '').trim();
     const body = parts[i + 1] || '';
-    const fullSection = parts[i] + '\n' + body;
+    const fullSection = parts[i] + '
+' + body;
     const lowerHeader = header.toLowerCase();
     if (lowerHeader.includes('embun pagi')) {
       sections.embunPagi = fullSection;
@@ -341,7 +446,7 @@ function renderDevotion(markdown, source) {
 }
 
 // ============================================
-// LOAD TODAY'S DEVOTION (CLEAN VERSION)
+// LOAD TODAY'S DEVOTION
 // ============================================
 
 async function loadTodayDevotion() {
@@ -349,13 +454,12 @@ async function loadTodayDevotion() {
   const youthEl = document.getElementById('youth-content');
   const dailyEl = document.getElementById('daily-content');
 
-  // Tampilkan loading
   const loadingHtml = '<div class="loading-state"><div class="loading-spinner"></div><p>Memuat renungan...</p></div>';
   if (embunEl) embunEl.innerHTML = loadingHtml;
   if (youthEl) youthEl.innerHTML = loadingHtml;
   if (dailyEl) dailyEl.innerHTML = loadingHtml;
 
-  // Coba semua kemungkinan path
+  // Coba load dari server (today.md)
   const basePaths = [
     '',
     'content/',
@@ -379,19 +483,19 @@ async function loadTodayDevotion() {
         }
       }
     } catch (e) {
-      // Silently fail, try next path
+      // Silently fail
     }
   }
 
-  // Jika semua gagal, gunakan fallback
+  // Jika gagal, gunakan embedded fallback
   renderDevotion(EMBEDDED_TODAY_MD, 'embedded');
 }
 
 // ============================================
-// LOAD ARCHIVED DEVOTION
+// LOAD ARCHIVED DEVOTION (DARI EMBEDDED)
 // ============================================
 
-async function loadArchivedDevotion(dateStr) {
+function loadArchivedDevotion(dateStr) {
   const embunEl = document.getElementById('embun-pagi-content');
   const youthEl = document.getElementById('youth-content');
   const dailyEl = document.getElementById('daily-content');
@@ -400,75 +504,19 @@ async function loadArchivedDevotion(dateStr) {
   const heroVerse = document.getElementById('hero-verse');
   const readingTimeText = document.getElementById('reading-time-text');
 
-  // Coba beberapa path untuk archive
-  const archivePaths = [
-    './content/archive/' + dateStr + '.md',
-    'content/archive/' + dateStr + '.md',
-    '/Filadelfia/content/archive/' + dateStr + '.md',
-    'Filadelfia/content/archive/' + dateStr + '.md'
-  ];
-
-  let loaded = false;
-  let lastError = '';
-
-  for (const archiveUrl of archivePaths) {
-    try {
-      const response = await fetch(archiveUrl);
-      if (response.ok) {
-        const markdown = await response.text();
-        const { frontMatter, content } = parseFrontMatter(markdown);
-
-        state.todayData = { frontMatter, content, markdown };
-        state.currentDate = dateStr;
-
-        heroTitle.textContent = frontMatter.title || 'Renungan Harian';
-        heroDate.textContent = formatDate(dateStr);
-        heroVerse.textContent = frontMatter.verse || '';
-
-        updateMetaTags(frontMatter);
-
-        const sections = splitDevotions(content);
-
-        if (sections.embunPagi) {
-          embunEl.innerHTML = processDevotionContent(marked.parse(sections.embunPagi), 'embun');
-        } else {
-          embunEl.innerHTML = '<p class="loading-state">Tidak ada konten.</p>';
-        }
-
-        if (sections.youth) {
-          youthEl.innerHTML = processDevotionContent(marked.parse(sections.youth), 'youth');
-        } else {
-          youthEl.innerHTML = '<p class="loading-state">Tidak ada konten.</p>';
-        }
-
-        if (sections.daily) {
-          dailyEl.innerHTML = processDevotionContent(marked.parse(sections.daily), 'daily');
-        } else {
-          dailyEl.innerHTML = '<p class="loading-state">Tidak ada konten.</p>';
-        }
-
-        const fullText = stripHtml(marked.parse(content));
-        readingTimeText.textContent = estimateReadingTime(fullText);
-
-        updateNavButtons();
-        checkArchivedStatus();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        loaded = true;
-        break;
-      }
-    } catch (error) {
-      lastError = error.message;
-    }
+  // Cek apakah ada di EMBEDDED_ARCHIVE
+  if (EMBEDDED_ARCHIVE[dateStr]) {
+    renderDevotion(EMBEDDED_ARCHIVE[dateStr], 'embedded-archive');
+    return;
   }
 
-  if (!loaded) {
-    console.error('Error loading archived devotion:', lastError);
-    heroTitle.textContent = 'Renungan Tidak Ditemukan';
-    heroDate.textContent = formatDate(dateStr);
-    embunEl.innerHTML = '<div class="error-state"><p>File archive/' + dateStr + '.md tidak ditemukan.</p><p style="font-size:0.85rem;color:#888;margin-top:8px;">Pastikan file ada di folder content/archive/</p></div>';
-    youthEl.innerHTML = '';
-    dailyEl.innerHTML = '';
-  }
+  // Jika tidak ada, tampilkan error
+  console.error('Archive not found:', dateStr);
+  heroTitle.textContent = 'Renungan Tidak Ditemukan';
+  heroDate.textContent = formatDate(dateStr);
+  embunEl.innerHTML = '<div class="error-state"><p>Renungan untuk tanggal ' + dateStr + ' belum tersedia.</p></div>';
+  youthEl.innerHTML = '';
+  dailyEl.innerHTML = '';
 }
 
 // ============================================
@@ -543,99 +591,37 @@ function showPage(pageName) {
 }
 
 // ============================================
-// ARCHIVE
+// ARCHIVE (DARI EMBEDDED DATA)
 // ============================================
 
-async function loadArchive() {
+function loadArchive() {
   const grid = document.getElementById('archive-grid');
   const stats = document.getElementById('archive-stats');
   const noResults = document.getElementById('no-results');
 
   if (grid) grid.innerHTML = '<div class="loading-state"><div class="loading-spinner"></div><p>Loading archive...</p></div>';
 
-  try {
-    let files = [];
-    try {
-      const idxResponse = await fetch('./content/archive-index.json');
-      if (idxResponse.ok) {
-        const idxData = await idxResponse.json();
-        files = idxData.files || [];
-      }
-    } catch (e) {
-      // No index file
-    }
-
-    if (files.length === 0) {
-      files = await discoverArchiveFiles();
-    }
-
-    state.archiveFiles = files;
-
-    const archiveData = [];
-    for (const filename of files) {
-      try {
-        const response = await fetch('./content/archive/' + filename);
-        if (response.ok) {
-          const markdown = await response.text();
-          const { frontMatter } = parseFrontMatter(markdown);
-          archiveData.push({
-            filename,
-            date: frontMatter.date || filename.replace('.md', ''),
-            title: frontMatter.title || 'Untitled',
-            verse: frontMatter.verse || ''
-          });
-        }
-      } catch (e) {
-        // Skip
-      }
-    }
-
-    archiveData.sort(function(a, b) {
-      return new Date(b.date) - new Date(a.date);
+  // Ambil semua archive dari EMBEDDED_ARCHIVE
+  const archiveData = [];
+  for (const [dateStr, markdown] of Object.entries(EMBEDDED_ARCHIVE)) {
+    const { frontMatter } = parseFrontMatter(markdown);
+    archiveData.push({
+      filename: dateStr + '.md',
+      date: dateStr,
+      title: frontMatter.title || 'Untitled',
+      verse: frontMatter.verse || ''
     });
-    state.archiveData = archiveData;
-
-    renderArchive(archiveData);
-    if (stats) stats.textContent = archiveData.length + ' devotion' + (archiveData.length !== 1 ? 's' : '') + ' in archive';
-
-  } catch (error) {
-    console.error('Error loading archive:', error);
-    if (grid) grid.innerHTML = '<div class="error-state"><p>Unable to load archive. Please check that archive files exist.</p></div>';
-    if (stats) stats.textContent = '';
-  }
-}
-
-async function discoverArchiveFiles() {
-  const files = [];
-  const today = new Date();
-
-  for (let i = 0; i < 30; i++) {
-    const date = new Date(today);
-    date.setDate(date.getDate() - i);
-    const dateStr = date.toISOString().split('T')[0];
-    const filename = dateStr + '.md';
-
-    const paths = [
-      './content/archive/' + filename,
-      'content/archive/' + filename,
-      '/Filadelfia/content/archive/' + filename,
-      'Filadelfia/content/archive/' + filename
-    ];
-
-    for (const path of paths) {
-      try {
-        const response = await fetch(path, { method: 'HEAD' });
-        if (response.ok) {
-          files.push(filename);
-          break;
-        }
-      } catch (e) {
-        // Try next path
-      }
-    }
   }
 
-  return files;
+  // Sort descending (terbaru dulu)
+  archiveData.sort(function(a, b) {
+    return new Date(b.date) - new Date(a.date);
+  });
+
+  state.archiveData = archiveData;
+
+  renderArchive(archiveData);
+  if (stats) stats.textContent = archiveData.length + ' devotion' + (archiveData.length !== 1 ? 's' : '') + ' in archive';
 }
 
 function renderArchive(data) {
@@ -652,7 +638,7 @@ function renderArchive(data) {
 
   if (grid) {
     grid.innerHTML = data.map(function(item) {
-      return '<a href="#" class="archive-card" onclick="loadArchivedDevotion(\'' + item.date + '\'); showPage(\'today\'); return false;">' +
+      return '<a href="#" class="archive-card" onclick="loadArchivedDevotion('' + item.date + ''); showPage('today'); return false;">' +
         '<div class="archive-card-date">' + formatShortDate(item.date) + '</div>' +
         '<div class="archive-card-title">' + escapeHtml(item.title) + '</div>' +
         (item.verse ? '<div class="archive-card-verse">' + escapeHtml(item.verse) + '</div>' : '') +
