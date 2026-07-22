@@ -1,10 +1,10 @@
 /* ============================================
    FILADELPHIA MINISTRY — Modern Daily Devotion
-   DEBUG VERSION v5 — July 2026
+   FINAL VERSION — Clean & Professional
    ============================================ */
 
 // ============================================
-// EMBEDDED FALLBACK DATA
+// EMBEDDED FALLBACK DATA (updated: 2026-07-22)
 // ============================================
 const EMBEDDED_TODAY_MD = `---
 title: Tetap Setia dalam Proses Tuhan
@@ -81,7 +81,7 @@ Keberanian untuk berkata benar lahir dari hati yang lebih takut mengecewakan Tuh
 
 ## Verse
 
-“And not only that, but we also glory in tribulations, knowing that tribulation produces perseverance; and perseverance, character; and character, hope. Now hope does not disappoint, because the love of God has been poured out in our hearts by the Holy Spirit who was given to us.” — Romans 5:3-5 (NKJV)
+"And not only that, but we also glory in tribulations, knowing that tribulation produces perseverance; and perseverance, character; and character, hope. Now hope does not disappoint, because the love of God has been poured out in our hearts by the Holy Spirit who was given to us." — Romans 5:3-5 (NKJV)
 
 ## Reflection
 
@@ -288,7 +288,6 @@ function renderDevotion(markdown, source) {
   const heroVerse = document.getElementById('hero-verse');
   const readingTimeText = document.getElementById('reading-time-text');
 
-  // Hapus loading state
   if (embunEl) embunEl.innerHTML = '';
   if (youthEl) youthEl.innerHTML = '';
   if (dailyEl) dailyEl.innerHTML = '';
@@ -342,19 +341,7 @@ function renderDevotion(markdown, source) {
 }
 
 // ============================================
-// DEBUG: Tampilkan status di layar
-// ============================================
-
-function showDebugStatus(message, isError) {
-  const debugDiv = document.getElementById('debug-status');
-  if (debugDiv) {
-    debugDiv.innerHTML += '<div style="padding:4px 0;border-bottom:1px solid #eee;">' + 
-      (isError ? '❌ ' : '✅ ') + message + '</div>';
-  }
-}
-
-// ============================================
-// LOAD TODAY'S DEVOTION (DEBUG VERSION)
+// LOAD TODAY'S DEVOTION (CLEAN VERSION)
 // ============================================
 
 async function loadTodayDevotion() {
@@ -362,21 +349,11 @@ async function loadTodayDevotion() {
   const youthEl = document.getElementById('youth-content');
   const dailyEl = document.getElementById('daily-content');
 
-  // Buat debug panel
-  let debugPanel = document.getElementById('debug-panel');
-  if (!debugPanel) {
-    debugPanel = document.createElement('div');
-    debugPanel.id = 'debug-panel';
-    debugPanel.style.cssText = 'position:fixed;bottom:20px;right:20px;width:320px;max-height:300px;overflow-y:auto;background:#1a1a2e;color:#eee;padding:12px;border-radius:8px;font-size:12px;z-index:99999;box-shadow:0 4px 20px rgba(0,0,0,0.5);';
-    debugPanel.innerHTML = '<div style="font-weight:bold;margin-bottom:8px;border-bottom:1px solid #444;padding-bottom:4px;">🐛 Debug Load</div><div id="debug-status"></div>';
-    document.body.appendChild(debugPanel);
-  }
-  document.getElementById('debug-status').innerHTML = '';
-
   // Tampilkan loading
-  if (embunEl) embunEl.innerHTML = '<div class="loading-state"><div class="loading-spinner"></div><p>Memuat renungan...</p></div>';
-  if (youthEl) youthEl.innerHTML = '<div class="loading-state"><div class="loading-spinner"></div><p>Memuat renungan...</p></div>';
-  if (dailyEl) dailyEl.innerHTML = '<div class="loading-state"><div class="loading-spinner"></div><p>Memuat renungan...</p></div>';
+  const loadingHtml = '<div class="loading-state"><div class="loading-spinner"></div><p>Memuat renungan...</p></div>';
+  if (embunEl) embunEl.innerHTML = loadingHtml;
+  if (youthEl) youthEl.innerHTML = loadingHtml;
+  if (dailyEl) dailyEl.innerHTML = loadingHtml;
 
   // Coba semua kemungkinan path
   const basePaths = [
@@ -391,33 +368,23 @@ async function loadTodayDevotion() {
   for (const basePath of basePaths) {
     try {
       const url = basePath + 'today.md' + cacheBuster;
-      showDebugStatus('Mencoba: ' + url, false);
-
       const response = await fetch(url);
 
       if (response.ok) {
         const markdown = await response.text();
-        showDebugStatus('Berhasil! Panjang: ' + markdown.length + ' chars', false);
 
         if (markdown && markdown.trim().length > 50 && markdown.includes('---')) {
           renderDevotion(markdown, url);
-          showDebugStatus('✅ Renungan ditampilkan dari: ' + url, false);
           return;
-        } else {
-          showDebugStatus('File terlalu pendek atau tidak ada front matter', true);
         }
-      } else {
-        showDebugStatus('Gagal: HTTP ' + response.status + ' untuk ' + url, true);
       }
     } catch (e) {
-      showDebugStatus('Error: ' + e.message + ' (' + basePath + ')', true);
+      // Silently fail, try next path
     }
   }
 
   // Jika semua gagal, gunakan fallback
-  showDebugStatus('Semua path gagal. Menggunakan fallback...', true);
   renderDevotion(EMBEDDED_TODAY_MD, 'embedded');
-  showDebugStatus('✅ Fallback ditampilkan', false);
 }
 
 // ============================================
