@@ -1,10 +1,9 @@
 /* ============================================
-   FILADELPHIA MINISTRY — Modern Daily Devotion
-   FINAL VERSION — Clean & Professional
+   FILADELPHIA MINISTRY — Archive Fix Version
    ============================================ */
 
 // ============================================
-// EMBEDDED FALLBACK DATA (updated: 2026-07-22)
+// EMBEDDED FALLBACK DATA (2026-07-22)
 // ============================================
 const EMBEDDED_TODAY_MD = `---
 title: Tetap Setia dalam Proses Tuhan
@@ -341,7 +340,7 @@ function renderDevotion(markdown, source) {
 }
 
 // ============================================
-// LOAD TODAY'S DEVOTION (CLEAN VERSION)
+// LOAD TODAY'S DEVOTION
 // ============================================
 
 async function loadTodayDevotion() {
@@ -349,13 +348,11 @@ async function loadTodayDevotion() {
   const youthEl = document.getElementById('youth-content');
   const dailyEl = document.getElementById('daily-content');
 
-  // Tampilkan loading
   const loadingHtml = '<div class="loading-state"><div class="loading-spinner"></div><p>Memuat renungan...</p></div>';
   if (embunEl) embunEl.innerHTML = loadingHtml;
   if (youthEl) youthEl.innerHTML = loadingHtml;
   if (dailyEl) dailyEl.innerHTML = loadingHtml;
 
-  // Coba semua kemungkinan path
   const basePaths = [
     '',
     'content/',
@@ -379,16 +376,15 @@ async function loadTodayDevotion() {
         }
       }
     } catch (e) {
-      // Silently fail, try next path
+      // Silently fail
     }
   }
 
-  // Jika semua gagal, gunakan fallback
   renderDevotion(EMBEDDED_TODAY_MD, 'embedded');
 }
 
 // ============================================
-// LOAD ARCHIVED DEVOTION
+// LOAD ARCHIVED DEVOTION (FIXED PATHS)
 // ============================================
 
 async function loadArchivedDevotion(dateStr) {
@@ -400,54 +396,72 @@ async function loadArchivedDevotion(dateStr) {
   const heroVerse = document.getElementById('hero-verse');
   const readingTimeText = document.getElementById('reading-time-text');
 
-  try {
-    const response = await fetch('./content/archive/' + dateStr + '.md');
-    if (!response.ok) throw new Error('File not found: ' + response.status);
+  // Coba beberapa path untuk archive
+  const archivePaths = [
+    './content/archive/' + dateStr + '.md',
+    'content/archive/' + dateStr + '.md',
+    '/Filadelfia/content/archive/' + dateStr + '.md',
+    'Filadelfia/content/archive/' + dateStr + '.md'
+  ];
 
-    const markdown = await response.text();
-    const { frontMatter, content } = parseFrontMatter(markdown);
+  let loaded = false;
+  let lastError = '';
 
-    state.todayData = { frontMatter, content, markdown };
-    state.currentDate = dateStr;
+  for (const archiveUrl of archivePaths) {
+    try {
+      const response = await fetch(archiveUrl);
+      if (response.ok) {
+        const markdown = await response.text();
+        const { frontMatter, content } = parseFrontMatter(markdown);
 
-    heroTitle.textContent = frontMatter.title || 'Renungan Harian';
-    heroDate.textContent = formatDate(dateStr);
-    heroVerse.textContent = frontMatter.verse || '';
+        state.todayData = { frontMatter, content, markdown };
+        state.currentDate = dateStr;
 
-    updateMetaTags(frontMatter);
+        heroTitle.textContent = frontMatter.title || 'Renungan Harian';
+        heroDate.textContent = formatDate(dateStr);
+        heroVerse.textContent = frontMatter.verse || '';
 
-    const sections = splitDevotions(content);
+        updateMetaTags(frontMatter);
 
-    if (sections.embunPagi) {
-      embunEl.innerHTML = processDevotionContent(marked.parse(sections.embunPagi), 'embun');
-    } else {
-      embunEl.innerHTML = '<p class="loading-state">Tidak ada konten.</p>';
+        const sections = splitDevotions(content);
+
+        if (sections.embunPagi) {
+          embunEl.innerHTML = processDevotionContent(marked.parse(sections.embunPagi), 'embun');
+        } else {
+          embunEl.innerHTML = '<p class="loading-state">Tidak ada konten.</p>';
+        }
+
+        if (sections.youth) {
+          youthEl.innerHTML = processDevotionContent(marked.parse(sections.youth), 'youth');
+        } else {
+          youthEl.innerHTML = '<p class="loading-state">Tidak ada konten.</p>';
+        }
+
+        if (sections.daily) {
+          dailyEl.innerHTML = processDevotionContent(marked.parse(sections.daily), 'daily');
+        } else {
+          dailyEl.innerHTML = '<p class="loading-state">Tidak ada konten.</p>';
+        }
+
+        const fullText = stripHtml(marked.parse(content));
+        readingTimeText.textContent = estimateReadingTime(fullText);
+
+        updateNavButtons();
+        checkArchivedStatus();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        loaded = true;
+        break;
+      }
+    } catch (error) {
+      lastError = error.message;
     }
+  }
 
-    if (sections.youth) {
-      youthEl.innerHTML = processDevotionContent(marked.parse(sections.youth), 'youth');
-    } else {
-      youthEl.innerHTML = '<p class="loading-state">Tidak ada konten.</p>';
-    }
-
-    if (sections.daily) {
-      dailyEl.innerHTML = processDevotionContent(marked.parse(sections.daily), 'daily');
-    } else {
-      dailyEl.innerHTML = '<p class="loading-state">Tidak ada konten.</p>';
-    }
-
-    const fullText = stripHtml(marked.parse(content));
-    readingTimeText.textContent = estimateReadingTime(fullText);
-
-    updateNavButtons();
-    checkArchivedStatus();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-
-  } catch (error) {
-    console.error('Error loading archived devotion:', error);
+  if (!loaded) {
+    console.error('Error loading archived devotion:', lastError);
     heroTitle.textContent = 'Renungan Tidak Ditemukan';
     heroDate.textContent = formatDate(dateStr);
-    embunEl.innerHTML = '<div class="error-state"><p>File archive/' + dateStr + '.md tidak ditemukan.</p></div>';
+    embunEl.innerHTML = '<div class="error-state"><p>File archive/' + dateStr + '.md tidak ditemukan.</p><p style="font-size:0.85rem;color:#888;margin-top:8px;">Pastikan file ada di folder content/archive/</p></div>';
     youthEl.innerHTML = '';
     dailyEl.innerHTML = '';
   }
@@ -525,7 +539,7 @@ function showPage(pageName) {
 }
 
 // ============================================
-// ARCHIVE
+// ARCHIVE (FIXED — multiple paths + manual list)
 // ============================================
 
 async function loadArchive() {
@@ -537,6 +551,8 @@ async function loadArchive() {
 
   try {
     let files = [];
+
+    // Coba baca archive-index.json
     try {
       const idxResponse = await fetch('./content/archive-index.json');
       if (idxResponse.ok) {
@@ -547,8 +563,14 @@ async function loadArchive() {
       // No index file
     }
 
+    // Jika tidak ada index, coba discover
     if (files.length === 0) {
       files = await discoverArchiveFiles();
+    }
+
+    // Jika masih kosong, coba path alternatif
+    if (files.length === 0) {
+      files = await discoverArchiveFilesAlt();
     }
 
     state.archiveFiles = files;
@@ -582,7 +604,7 @@ async function loadArchive() {
 
   } catch (error) {
     console.error('Error loading archive:', error);
-    if (grid) grid.innerHTML = '<div class="error-state"><p>Unable to load archive. Please check that archive files exist.</p></div>';
+    if (grid) grid.innerHTML = '<div class="error-state"><p>Unable to load archive. Please check that archive files exist in content/archive/</p></div>';
     if (stats) stats.textContent = '';
   }
 }
@@ -604,6 +626,39 @@ async function discoverArchiveFiles() {
       }
     } catch (e) {
       // File does not exist
+    }
+  }
+
+  return files;
+}
+
+// Path alternatif untuk discover
+async function discoverArchiveFilesAlt() {
+  const files = [];
+  const today = new Date();
+
+  for (let i = 0; i < 30; i++) {
+    const date = new Date(today);
+    date.setDate(date.getDate() - i);
+    const dateStr = date.toISOString().split('T')[0];
+    const filename = dateStr + '.md';
+
+    const altPaths = [
+      'content/archive/' + filename,
+      '/Filadelfia/content/archive/' + filename,
+      'Filadelfia/content/archive/' + filename
+    ];
+
+    for (const path of altPaths) {
+      try {
+        const response = await fetch(path, { method: 'HEAD' });
+        if (response.ok) {
+          files.push(filename);
+          break;
+        }
+      } catch (e) {
+        // Try next path
+      }
     }
   }
 
