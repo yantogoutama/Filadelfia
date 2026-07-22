@@ -10,7 +10,7 @@ verse: "Yakobus 1:2-3"
 
 ## Ayat
 
-"Saudara-saudaraku, anggaplah sebagai suatu kebahagiaan, apabila kamu jatuh ke dalam berbagai-bagai pencobaan, sebab kamu tahu, bahwa ujian terhadap imanmu itu menghasilkan ketekunan." (Yakobus 3:2-3)
+"Saudara-saudaraku, anggaplah sebagai suatu kebahagiaan, apabila kamu jatuh ke dalam berbagai-bagai pencobaan, sebab kamu tahu, bahwa ujian terhadap imanmu itu menghasilkan ketekunan." (Yakobus 1:2-3)
 
 ## Renungan
 
