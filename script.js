@@ -1,9 +1,10 @@
 /* ============================================
-   FILADELPHIA MINISTRY — Archive Fix Version
+   FILADELPHIA MINISTRY — Modern Daily Devotion
+   FINAL VERSION — Clean & Professional
    ============================================ */
 
 // ============================================
-// EMBEDDED FALLBACK DATA (2026-07-22)
+// EMBEDDED FALLBACK DATA (updated: 2026-07-22)
 // ============================================
 const EMBEDDED_TODAY_MD = `---
 title: Tetap Setia dalam Proses Tuhan
@@ -340,7 +341,7 @@ function renderDevotion(markdown, source) {
 }
 
 // ============================================
-// LOAD TODAY'S DEVOTION
+// LOAD TODAY'S DEVOTION (CLEAN VERSION)
 // ============================================
 
 async function loadTodayDevotion() {
@@ -348,11 +349,13 @@ async function loadTodayDevotion() {
   const youthEl = document.getElementById('youth-content');
   const dailyEl = document.getElementById('daily-content');
 
+  // Tampilkan loading
   const loadingHtml = '<div class="loading-state"><div class="loading-spinner"></div><p>Memuat renungan...</p></div>';
   if (embunEl) embunEl.innerHTML = loadingHtml;
   if (youthEl) youthEl.innerHTML = loadingHtml;
   if (dailyEl) dailyEl.innerHTML = loadingHtml;
 
+  // Coba semua kemungkinan path
   const basePaths = [
     '',
     'content/',
@@ -376,15 +379,16 @@ async function loadTodayDevotion() {
         }
       }
     } catch (e) {
-      // Silently fail
+      // Silently fail, try next path
     }
   }
 
+  // Jika semua gagal, gunakan fallback
   renderDevotion(EMBEDDED_TODAY_MD, 'embedded');
 }
 
 // ============================================
-// LOAD ARCHIVED DEVOTION (FIXED PATHS)
+// LOAD ARCHIVED DEVOTION
 // ============================================
 
 async function loadArchivedDevotion(dateStr) {
@@ -539,7 +543,7 @@ function showPage(pageName) {
 }
 
 // ============================================
-// ARCHIVE (FIXED — multiple paths + manual list)
+// ARCHIVE
 // ============================================
 
 async function loadArchive() {
@@ -551,8 +555,6 @@ async function loadArchive() {
 
   try {
     let files = [];
-
-    // Coba baca archive-index.json
     try {
       const idxResponse = await fetch('./content/archive-index.json');
       if (idxResponse.ok) {
@@ -563,14 +565,8 @@ async function loadArchive() {
       // No index file
     }
 
-    // Jika tidak ada index, coba discover
     if (files.length === 0) {
       files = await discoverArchiveFiles();
-    }
-
-    // Jika masih kosong, coba path alternatif
-    if (files.length === 0) {
-      files = await discoverArchiveFilesAlt();
     }
 
     state.archiveFiles = files;
@@ -604,7 +600,7 @@ async function loadArchive() {
 
   } catch (error) {
     console.error('Error loading archive:', error);
-    if (grid) grid.innerHTML = '<div class="error-state"><p>Unable to load archive. Please check that archive files exist in content/archive/</p></div>';
+    if (grid) grid.innerHTML = '<div class="error-state"><p>Unable to load archive. Please check that archive files exist.</p></div>';
     if (stats) stats.textContent = '';
   }
 }
@@ -619,37 +615,14 @@ async function discoverArchiveFiles() {
     const dateStr = date.toISOString().split('T')[0];
     const filename = dateStr + '.md';
 
-    try {
-      const response = await fetch('./content/archive/' + filename, { method: 'HEAD' });
-      if (response.ok) {
-        files.push(filename);
-      }
-    } catch (e) {
-      // File does not exist
-    }
-  }
-
-  return files;
-}
-
-// Path alternatif untuk discover
-async function discoverArchiveFilesAlt() {
-  const files = [];
-  const today = new Date();
-
-  for (let i = 0; i < 30; i++) {
-    const date = new Date(today);
-    date.setDate(date.getDate() - i);
-    const dateStr = date.toISOString().split('T')[0];
-    const filename = dateStr + '.md';
-
-    const altPaths = [
+    const paths = [
+      './content/archive/' + filename,
       'content/archive/' + filename,
       '/Filadelfia/content/archive/' + filename,
       'Filadelfia/content/archive/' + filename
     ];
 
-    for (const path of altPaths) {
+    for (const path of paths) {
       try {
         const response = await fetch(path, { method: 'HEAD' });
         if (response.ok) {
